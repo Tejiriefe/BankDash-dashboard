@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankDash. - Setting</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F5F7FA;
+            --sidebar-bg: #FFFFFF;
+            --primary-blue: #1814F3;
+            --text-dark: #343C6A;
+            --text-light: #718EBF;
+            --border-color: #E6EFF5;
+            --red-color: #FF4B4A;
+            --green-color: #41D4A8;
+            --shadow-sm: 0px 4px 10px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0px 8px 20px rgba(0, 0, 0, 0.08);
+            --border-radius-main: 20px;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            position: fixed;
+            height: 100vh;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 30px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .logo svg {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            fill: var(--primary-blue);
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding-top: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            color: #B1B1B1;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 20px;
+            fill: currentColor;
+        }
+
+        .nav-item.active {
+            color: var(--primary-blue);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background-color: var(--primary-blue);
+            border-radius: 0 5px 5px 0;
+        }
+
+        /* Main Wrapper */
+        .main-wrapper {
+            margin-left: 250px;
+            flex: 1;
+            min-width: 0;
+            max-width: calc(100vw - 250px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Topbar */
+        .topbar {
+            height: 90px;
+            background-color: var(--sidebar-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .topbar h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-color);
+            border-radius: 40px;
+            padding: 12px 20px;
+            width: 250px;
+        }
+
+        .search-bar svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-light);
+            margin-right: 10px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 14px;
+            color: var(--text-dark);
+            width: 100%;
+        }
+
+        .icon-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #396AFF;
+        }
+
+        .icon-btn.red svg {
+            fill: var(--red-color);
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel {
+            background-color: var(--sidebar-bg);
+            border-radius: var(--border-radius-main);
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Tab Bar */
+        .tab-bar {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 32px;
+            gap: 0;
+        }
+
+        .tab-btn {
+            padding: 14px 28px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-light);
+            cursor: pointer;
+            margin-bottom: -2px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-blue);
+            border-bottom-color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        /* Tab 1: Profile */
+        .profile-layout {
+            display: flex;
+            align-items: flex-start;
+            gap: 40px;
+        }
+
+        .profile-pic-area {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-pic-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .profile-edit-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 24px;
+            height: 24px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .profile-edit-btn svg {
+            width: 12px;
+            height: 12px;
+            fill: #FFFFFF;
+        }
+
+        .profile-form {
+            flex: 1;
+        }
+
+        /* Form Components */
+        .form-row {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-input {
+            border: 1.5px solid var(--border-color);
+            border-radius: 12px;
+            padding: 13px 16px;
+            font-size: 14px;
+            color: var(--text-dark);
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .form-input.has-arrow {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23718EBF'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+        
+        .form-input::placeholder {
+            color: var(--text-light);
+        }
+
+        .save-btn {
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 52px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: block;
+            margin-left: auto;
+            margin-top: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Tab 2: Preferences */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .toggle-text {
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .toggle-switch {
+            width: 50px;
+            height: 26px;
+            border-radius: 13px;
+            background: #E0E0E0;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch.on { background: #16DBCC; }
+
+        .toggle-knob {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            transition: left 0.2s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .toggle-switch.on .toggle-knob { left: 27px; }
+
+        /* Security */
+        .password-fields {
+            max-width: 55%;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main-wrapper { margin-left: 0; max-width: 100vw; }
+            .topbar { padding: 0 16px; }
+            .content { padding: 16px; }
+            .form-row { flex-direction: column; }
+            .profile-layout { flex-direction: column; align-items: center; }
+            .search-bar { display: none; }
+            .tab-btn { padding: 12px 16px; font-size: 13px; }
+            .password-fields { max-width: 100% !important; }
+            .save-btn { width: 100%; margin-top: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <svg viewBox="0 0 24 24"><path d="M2.5 19h19v2h-19v-2zm16.5-11.5c0 1.93-1.57 3.5-3.5 3.5s-3.5-1.57-3.5-3.5 1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5zm-5 0c0-1.51 1.05-2.77 2.45-3.26-1.12-.16-2.27-.24-3.45-.24-5.52 0-10 4.48-10 10s4.48 10 10 10c1.07 0 2.1-.17 3.06-.48-1.57-.86-2.65-2.52-2.65-4.43 0-2.45 1.81-4.48 4.16-4.88-.04-.57-.04-1.14 0-1.71zm5 4.5l-2.45-2.45c1.05-.48 1.83-1.51 1.83-2.72 0-1.66-1.34-3-3-3s-3 1.34-3 3c0 1.21.78 2.24 1.83 2.72l-2.45 2.45h7.17z"/></svg>
+            BankDash.
+        </div>
+        <nav class="nav">
+            <a href="index.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Dashboard
+            </a>
+            <a href="transactions.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg> Transactions
+            </a>
+            <a href="accounts.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg> Accounts
+            </a>
+            <a href="investments.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg> Investments
+            </a>
+            <a href="creditcard.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg> Credit Cards
+            </a>
+            <a href="loans.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M2 12A10 10 0 1 0 22 12A10 10 0 1 0 2 12ZM14.47 11.23a1.44 1.44 0 0 1-1.07.6c-.22.04-.44.09-.67.14L12 12.18V15h-2v-2.31c0-.44.2-.85.54-1.11l2.4-1.8c.24-.18.42-.42.54-.7.12-.29.14-.6.04-.9-.09-.3-.29-.56-.56-.74-.26-.18-.58-.25-.89-.18-.32.06-.59.25-.76.53L10.5 8.35C11.16 7.15 12.63 6.64 13.9 7.13c1.26.49 1.94 1.83 1.55 3.12-.08.3-.23.59-.47.8l-.51.18ZM13 19h-2v-2h2v2Z"/></svg> Loans
+            </a>
+            <a href="services.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49-.12-.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg> Services
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg> My Privileges
+            </a>
+            <a href="settings.html" class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.73 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Setting
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <!-- Topbar -->
+        <header class="topbar">
+            <h1>Setting</h1>
+            <div class="topbar-right">
+                <div class="search-bar">
+                    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    <input type="text" placeholder="Search for something">
+                </div>
+                <div class="icon-btn">
+                    <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.73 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                </div>
+                <div class="icon-btn red">
+                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Charlene+Reed&background=1814F3&color=fff&size=50" class="avatar" alt="Avatar">
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="content">
+            <div class="panel">
+                
+                <!-- Tab Switching Bar -->
+                <div class="tab-bar">
+                    <button class="tab-btn active" onclick="showTab('edit')">Edit Profile</button>
+                    <button class="tab-btn" onclick="showTab('pref')">Preferences</button>
+                    <button class="tab-btn" onclick="showTab('sec')">Security</button>
+                </div>
+
+                <!-- Tab 1: Edit Profile -->
+                <div id="tab-edit" class="tab-content" style="display: block;">
+                    <div class="profile-layout">
+                        <!-- Left side avatar -->
+                        <div class="profile-pic-area">
+                            <img src="https://ui-avatars.com/api/?name=Charlene+Reed&background=1814F3&color=fff&size=90" class="profile-pic-img" alt="Profile">
+                            <div class="profile-edit-btn">
+                                <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                            </div>
+                        </div>
+
+                        <!-- Right side form -->
+                        <div class="profile-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Your Name</label>
+                                    <input type="text" class="form-input" value="Charlene Reed">
+                                </div>
+                                <div class="form-group">
+                                    <label>User Name</label>
+                                    <input type="text" class="form-input" value="Charlene Reed">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" class="form-input" value="charlenereed@gmail.com">
+                                </div>
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" class="form-input" value="••••••••••">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Date of Birth</label>
+                                    <select class="form-input has-arrow">
+                                        <option value="25 January 1990">25 January 1990</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Present Address</label>
+                                    <input type="text" class="form-input" value="San Jose, California, USA">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Permanent Address</label>
+                                    <input type="text" class="form-input" value="San Jose, California, USA">
+                                </div>
+                                <div class="form-group">
+                                    <label>City</label>
+                                    <input type="text" class="form-input" value="San Jose">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Postal Code</label>
+                                    <input type="text" class="form-input" value="45962">
+                                </div>
+                                <div class="form-group">
+                                    <label>Country</label>
+                                    <input type="text" class="form-input" value="USA">
+                                </div>
+                            </div>
+
+                            <button class="save-btn">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2: Preferences -->
+                <div id="tab-pref" class="tab-content">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Currency</label>
+                            <input type="text" class="form-input" value="USD">
+                        </div>
+                        <div class="form-group">
+                            <label>Time Zone</label>
+                            <input type="text" class="form-input" value="(GMT-12:00) International Date Line West">
+                        </div>
+                    </div>
+
+                    <h3 style="font-size:16px; font-weight:600; color:var(--text-dark); margin:24px 0 16px">Notification</h3>
+                    
+                    <div class="toggle-row">
+                        <div class="toggle-switch on">
+                            <div class="toggle-knob"></div>
+                        </div>
+                        <span class="toggle-text">I send or receive digita currency</span>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div class="toggle-switch">
+                            <div class="toggle-knob"></div>
+                        </div>
+                        <span class="toggle-text">I receive merchant order</span>
+                    </div>
+
+                    <div class="toggle-row">
+                        <div class="toggle-switch on">
+                            <div class="toggle-knob"></div>
+                        </div>
+                        <span class="toggle-text">There are recommendation for my account</span>
+                    </div>
+
+                    <button class="save-btn">Save</button>
+                </div>
+
+                <!-- Tab 3: Security -->
+                <div id="tab-sec" class="tab-content">
+                    <h3 style="font-size:16px; font-weight:600; color:var(--text-dark); margin-bottom:16px">Two-factor Authentication</h3>
+                    <div class="toggle-row">
+                        <div class="toggle-switch on">
+                            <div class="toggle-knob"></div>
+                        </div>
+                        <span class="toggle-text">Enable or disable two factor authentication</span>
+                    </div>
+
+                    <h3 style="font-size:16px; font-weight:600; color:var(--text-dark); margin-bottom:16px; margin-top:32px;">Change Password</h3>
+                    
+                    <div class="password-fields">
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input type="password" class="form-input" placeholder="••••••••••">
+                        </div>
+                        <div class="form-group" style="margin-top: 16px;">
+                            <label>New Password</label>
+                            <input type="password" class="form-input" placeholder="••••••••••">
+                        </div>
+                    </div>
+
+                    <button class="save-btn">Save</button>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Interactive Scripts -->
+    <script>
+        // Tab Switching Logic
+        function showTab(name) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(t => {
+                t.style.display = 'none';
+            });
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            // Show requested tab content and set active class
+            document.getElementById('tab-' + name).style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        // Toggle Switch Logic
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('on');
+            });
+        });
+    </script>
+</body>
+</html>

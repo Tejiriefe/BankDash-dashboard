@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankDash. - Investments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #F5F7FA;
+            --sidebar-bg: #FFFFFF;
+            --primary-blue: #1814F3;
+            --text-dark: #343C6A;
+            --text-light: #718EBF;
+            --text-white: #FFFFFF;
+            --card-light-bg: #FFFFFF;
+            --border-color: #E6EFF5;
+            --red-color: #FF4B4A;
+            --green-color: #41D4A8;
+            --teal-color: #16DBCC;
+            --pink-color: #FF82AC;
+            --yellow-color: #FFBB38;
+            --shadow-sm: 0px 4px 10px rgba(0, 0, 0, 0.05);
+            --border-radius-main: 20px;
+            --border-radius-card: 16px;
+        }
+
+        html,
+        body {
+            overflow-x: hidden;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 30px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .logo svg {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            fill: var(--primary-blue);
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding-top: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 20px;
+            fill: currentColor;
+        }
+
+        .nav-item.active {
+            color: var(--primary-blue);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background-color: var(--primary-blue);
+            border-radius: 0 5px 5px 0;
+        }
+
+        /* Topbar Styles */
+        .main-wrapper {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            width: 100%;
+            max-width: calc(100vw - 250px);
+        }
+
+        .topbar {
+            height: 90px;
+            background-color: var(--sidebar-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .topbar h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-color);
+            border-radius: 40px;
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .search-bar svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-light);
+            margin-right: 10px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 14px;
+            color: var(--text-dark);
+            width: 100%;
+        }
+
+        .search-bar input::placeholder {
+            color: #8BA3CB;
+        }
+
+        .icon-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .icon-btn:hover {
+            background-color: #E2E8F0;
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #396AFF;
+        }
+
+        .icon-btn.red svg {
+            fill: var(--red-color);
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* Generic Card Style */
+        .card {
+            background-color: #FFFFFF;
+            border-radius: var(--border-radius-card);
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+        }
+
+        /* Section 1: Stats */
+        .stats-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .stat-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .stat-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .stat-icon.teal {
+            background-color: #DCFAF8;
+            color: var(--teal-color);
+        }
+
+        .stat-icon.pink {
+            background-color: #FFE6F0;
+            color: var(--pink-color);
+        }
+
+        .stat-icon.blue {
+            background-color: #E7EDFF;
+            color: var(--primary-blue);
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .stat-value.green {
+            color: var(--green-color);
+        }
+
+        /* Layout rows for charts & lists */
+        .flex-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .flex-row>div {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+            width: 100%;
+        }
+
+        /* My Investment List */
+        .inv-items {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .inv-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .inv-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .inv-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .inv-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+
+        .inv-icon.pink {
+            background-color: #FFE6F0;
+        }
+
+        .inv-icon.blue {
+            background-color: #E7EDFF;
+        }
+
+        .inv-icon.yellow {
+            background-color: #FFF5D9;
+        }
+
+        .inv-text h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .inv-text p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .inv-mid {
+            flex: 1;
+        }
+
+        .inv-mid h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .inv-mid p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .inv-right {
+            text-align: right;
+            min-width: 80px;
+        }
+
+        .inv-right h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .inv-right p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .text-green {
+            color: var(--green-color) !important;
+        }
+
+        .text-red {
+            color: var(--red-color) !important;
+        }
+
+        /* Trending Stock Table */
+        .stock-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .stock-table th {
+            text-align: left;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 14px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stock-table td {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .stock-table tr:last-child td {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .stock-table td:first-child {
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .stock-table td:last-child {
+            font-weight: 600;
+        }
+
+        /* Responsive Layouts */
+        @media (max-width: 1200px) {
+
+            .flex-row,
+            .stats-row {
+                flex-direction: column;
+            }
+
+            .hamburger-btn {
+                display: none;
+            }
+
+            .mobile-search {
+                display: none;
+                align-items: center;
+                background: #F5F7FA;
+                border-radius: 40px;
+                padding: 12px 20px;
+                margin: 12px 16px;
+                gap: 10px;
+            }
+
+            .mobile-search svg {
+                width: 18px;
+                height: 18px;
+                fill: #718EBF;
+                flex-shrink: 0;
+            }
+
+            .mobile-search input {
+                border: none;
+                background: none;
+                outline: none;
+                font-size: 14px;
+                color: #343C6A;
+                width: 100%;
+                font-family: 'Inter', sans-serif;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { 
+                display: none !important; 
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background-color: var(--sidebar-bg, #fff);
+                z-index: 1000;
+                overflow-y: auto;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            }
+            .sidebar.mobile-active {
+                display: flex !important;
+            }
+            .sidebar .logo {
+                display: none;
+            }
+
+            .main-wrapper {
+                margin-left: 0;
+                max-width: 100vw;
+                width: 100%;
+            }
+
+            body {
+                overflow-x: hidden;
+            }
+
+            .content {
+                padding: 16px;
+                gap: 16px;
+            }
+
+            .topbar {
+                padding: 12px 16px;
+                height: auto;
+            }
+
+            .hamburger-btn {
+                display: block;
+                background: none;
+                border: none;
+                cursor: pointer;
+                padding: 4px;
+            }
+
+            .topbar h1 {
+                font-size: 18px;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .icon-btn {
+                display: none !important;
+            }
+
+            .mobile-search {
+                display: flex;
+            }
+
+            .cards-container {
+                flex-direction: row !important;
+                gap: 12px;
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+
+            .credit-card {
+                min-width: 200px !important;
+                padding: 18px;
+            }
+
+            .card-balance {
+                font-size: 18px;
+            }
+
+            .card-number {
+                font-size: 14px;
+            }
+
+            .row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .flex-row {
+                flex-direction: column !important;
+                gap: 16px;
+            }
+
+            .transactions-card {
+                height: auto;
+                max-height: none;
+            }
+
+            .panel {
+                padding: 16px !important;
+            }
+
+            .chart-container,
+            .chart-container-bar,
+            .chart-container-line {
+                height: 200px !important;
+            }
+
+            .users-list {
+                gap: 16px;
+                justify-content: flex-start;
+            }
+
+            .user-avatar {
+                width: 45px;
+                height: 45px;
+            }
+
+            .user-name {
+                font-size: 12px;
+            }
+
+            .user-role {
+                font-size: 11px;
+            }
+
+            .transfer-form {
+                flex-direction: row;
+            }
+
+            .transfer-input-group {
+                flex: 1;
+            }
+
+            .stats-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+            .stat-card {
+                flex-basis: calc(50% - 10px) !important;
+                min-width: 0 !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar Section -->
+    <aside class="sidebar">
+        <div class="logo">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M2.5 19h19v2h-19v-2zm16.5-11.5c0 1.93-1.57 3.5-3.5 3.5s-3.5-1.57-3.5-3.5 1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5zm-5 0c0-1.51 1.05-2.77 2.45-3.26-1.12-.16-2.27-.24-3.45-.24-5.52 0-10 4.48-10 10s4.48 10 10 10c1.07 0 2.1-.17 3.06-.48-1.57-.86-2.65-2.52-2.65-4.43 0-2.45 1.81-4.48 4.16-4.88-.04-.57-.04-1.14 0-1.71zm5 4.5l-2.45-2.45c1.05-.48 1.83-1.51 1.83-2.72 0-1.66-1.34-3-3-3s-3 1.34-3 3c0 1.21.78 2.24 1.83 2.72l-2.45 2.45h7.17z" />
+            </svg>
+            BankDash.
+        </div>
+        <nav class="nav">
+            <a href="index.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg> Dashboard
+            </a>
+            <a href="transactions.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" />
+                </svg> Transactions
+            </a>
+            <a href="accounts.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+                </svg> Accounts
+            </a>
+            <a href="investments.html" class="nav-item active">
+                <svg viewBox="0 0 24 24">
+                    <path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z" />
+                </svg> Investments
+            </a>
+            <a href="creditcard.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z" />
+                </svg> Credit Cards
+            </a>
+            <a href="loans.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M2 12A10 10 0 1 0 22 12A10 10 0 1 0 2 12ZM14.47 11.23a1.44 1.44 0 0 1-1.07.6c-.22.04-.44.09-.67.14L12 12.18V15h-2v-2.31c0-.44.2-.85.54-1.11l2.4-1.8c.24-.18.42-.42.54-.7.12-.29.14-.6.04-.9-.09-.3-.29-.56-.56-.74-.26-.18-.58-.25-.89-.18-.32.06-.59.25-.76.53L10.5 8.35C11.16 7.15 12.63 6.64 13.9 7.13c1.26.49 1.94 1.83 1.55 3.12-.08.3-.23.59-.47.8l-.51.18ZM13 19h-2v-2h2v2Z" />
+                </svg> Loans
+            </a>
+            <a href="services.html" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
+                </svg> Services
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z" />
+                </svg> My Privileges
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24">
+                    <path
+                        d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.73 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                </svg> Setting
+            </a>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <!-- Topbar Section -->
+        <header class="topbar">
+            <button class="hamburger-btn">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="#343C6A">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
+                </svg>
+            </button>
+            <h1>Investments</h1>
+            <div class="topbar-right">
+                <div class="search-bar">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                    </svg>
+                    <input type="text" placeholder="Search for something">
+                </div>
+                <div class="icon-btn">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.73 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                    </svg>
+                </div>
+                <div class="icon-btn red">
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z" />
+                    </svg>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=User&background=1814F3&color=fff&size=50" alt="Avatar"
+                    class="avatar">
+            </div>
+        </header>
+        <div class="mobile-search">
+            <svg viewBox="0 0 24 24">
+                <path
+                    d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <input type="text" placeholder="Search for something">
+        </div>
+
+        <!-- Main Content Area -->
+        <main class="content">
+
+            <!-- Section 1: Stats Row -->
+            <div class="stats-row">
+                <div class="card stat-card">
+                    <div class="stat-icon teal">💰</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Total Invested Amount</p>
+                        <p class="stat-value">$150,000</p>
+                    </div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-icon pink">📈</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Number of Investments</p>
+                        <p class="stat-value">1,250</p>
+                    </div>
+                </div>
+                <div class="card stat-card">
+                    <div class="stat-icon blue">🔄</div>
+                    <div class="stat-info">
+                        <p class="stat-label">Rate of Return</p>
+                        <p class="stat-value green">+5.80%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Charts Row -->
+            <div class="flex-row">
+                <!-- Yearly Total Investment -->
+                <div>
+                    <h2 class="section-header">Yearly Total Investment</h2>
+                    <div class="card">
+                        <div class="chart-container">
+                            <canvas id="yearlyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly Revenue -->
+                <div>
+                    <h2 class="section-header">Monthly Revenue</h2>
+                    <div class="card">
+                        <div class="chart-container">
+                            <canvas id="monthlyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Lists Row -->
+            <div class="flex-row">
+                <!-- My Investment -->
+                <div>
+                    <h2 class="section-header">My Investment</h2>
+                    <div class="card">
+                        <div class="inv-items">
+                            <!-- Apple Store -->
+                            <div class="inv-item">
+                                <div class="inv-left">
+                                    <div class="inv-icon pink">🍎</div>
+                                    <div class="inv-text">
+                                        <h4>Apple Store</h4>
+                                        <p>E-commerce, Marketplace</p>
+                                    </div>
+                                </div>
+                                <div class="inv-mid">
+                                    <h4>$54,000</h4>
+                                    <p>Envvestment Value</p>
+                                </div>
+                                <div class="inv-right">
+                                    <h4 class="text-green">+16%</h4>
+                                    <p>Return Value</p>
+                                </div>
+                            </div>
+                            <!-- Samsung Mobile -->
+                            <div class="inv-item">
+                                <div class="inv-left">
+                                    <div class="inv-icon blue">G</div>
+                                    <div class="inv-text">
+                                        <h4>Samsung Mobile</h4>
+                                        <p>E-commerce, Marketplace</p>
+                                    </div>
+                                </div>
+                                <div class="inv-mid">
+                                    <h4>$25,300</h4>
+                                    <p>Envvestment Value</p>
+                                </div>
+                                <div class="inv-right">
+                                    <h4 class="text-red">-4%</h4>
+                                    <p>Return Value</p>
+                                </div>
+                            </div>
+                            <!-- Tesla Motors -->
+                            <div class="inv-item">
+                                <div class="inv-left">
+                                    <div class="inv-icon yellow">T</div>
+                                    <div class="inv-text">
+                                        <h4>Tesla Motors</h4>
+                                        <p>Electric Vehicles</p>
+                                    </div>
+                                </div>
+                                <div class="inv-mid">
+                                    <h4>$8,200</h4>
+                                    <p>Envvestment Value</p>
+                                </div>
+                                <div class="inv-right">
+                                    <h4 class="text-green">+25%</h4>
+                                    <p>Return Value</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trending Stock -->
+                <div>
+                    <h2 class="section-header">Trending Stock</h2>
+                    <div class="card">
+                        <table class="stock-table">
+                            <thead>
+                                <tr>
+                                    <th>SL No</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Return</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>01.</td>
+                                    <td>Trivago</td>
+                                    <td>$520</td>
+                                    <td class="text-green">+5%</td>
+                                </tr>
+                                <tr>
+                                    <td>02.</td>
+                                    <td>Canon</td>
+                                    <td>$480</td>
+                                    <td class="text-green">+10%</td>
+                                </tr>
+                                <tr>
+                                    <td>03.</td>
+                                    <td>Uber Food</td>
+                                    <td>$350</td>
+                                    <td class="text-red">-3%</td>
+                                </tr>
+                                <tr>
+                                    <td>04.</td>
+                                    <td>Nokia</td>
+                                    <td>$940</td>
+                                    <td class="text-green">+2%</td>
+                                </tr>
+                                <tr>
+                                    <td>05.</td>
+                                    <td>Tiktok</td>
+                                    <td>$670</td>
+                                    <td class="text-red">-12%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Chart Scripts -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Chart Default Options for Consistency
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = "#718EBF";
+            Chart.defaults.plugins.legend.display = false;
+
+            const gridOptions = {
+                color: '#E6EFF5',
+                borderDash: [5, 5],
+                drawBorder: false
+            };
+
+            const yAxisOptions = {
+                min: 0,
+                max: 40000,
+                ticks: {
+                    stepSize: 10000,
+                    callback: function (value) {
+                        if (value === 0) return "$0";
+                        return "$" + (value / 1000) + ",000";
+                    }
+                },
+                grid: gridOptions,
+                border: { display: false }
+            };
+
+            const xAxisOptions = {
+                grid: { display: false },
+                border: { display: false }
+            };
+
+            // Chart 1: Yearly Total Investment (Line with points)
+            const yearlyCtx = document.getElementById('yearlyChart').getContext('2d');
+            new Chart(yearlyCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2016', '2017', '2018', '2019', '2020', '2021'],
+                    datasets: [{
+                        data: [5000, 22000, 18000, 38000, 21000, 28000],
+                        borderColor: '#FFBB38',
+                        backgroundColor: '#FFBB38',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#FFFFFF',
+                        pointBorderColor: '#FFBB38',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        tension: 0.4,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    scales: {
+                        y: yAxisOptions,
+                        x: xAxisOptions
+                    }
+                }
+            });
+
+            // Chart 2: Monthly Revenue (Smooth line, no points)
+            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+            new Chart(monthlyCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2016', '2017', '2018', '2019', '2020', '2021'],
+                    datasets: [{
+                        data: [12000, 28000, 22000, 18000, 25000, 35000],
+                        borderColor: '#16DBCC',
+                        borderWidth: 3,
+                        pointRadius: 0,
+                        pointHoverRadius: 0,
+                        tension: 0.4,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    scales: {
+                        y: yAxisOptions,
+                        x: xAxisOptions
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const hamburgerBtn = document.querySelector(".hamburger-btn");
+            const sidebar = document.querySelector(".sidebar");
+            if (hamburgerBtn && sidebar) {
+                hamburgerBtn.addEventListener("click", function () {
+                    sidebar.classList.toggle("mobile-active");
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

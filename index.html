@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankDash.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>    
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <svg viewBox="0 0 24 24"><path d="M2.5 19h19v2h-19v-2zm16.5-11.5c0 1.93-1.57 3.5-3.5 3.5s-3.5-1.57-3.5-3.5 1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5zm-5 0c0-1.51 1.05-2.77 2.45-3.26-1.12-.16-2.27-.24-3.45-.24-5.52 0-10 4.48-10 10s4.48 10 10 10c1.07 0 2.1-.17 3.06-.48-1.57-.86-2.65-2.52-2.65-4.43 0-2.45 1.81-4.48 4.16-4.88-.04-.57-.04-1.14 0-1.71zm5 4.5l-2.45-2.45c1.05-.48 1.83-1.51 1.83-2.72 0-1.66-1.34-3-3-3s-3 1.34-3 3c0 1.21.78 2.24 1.83 2.72l-2.45 2.45h7.17z"/></svg>
+            BankDash.
+        </div>
+        <nav class="nav">
+            <a href="index.html" class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Dashboard
+            </a>
+            <a href="./transactions.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg> Transactions
+            </a>
+            <a href="./accounts.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg> Accounts
+            </a>
+            <a href="./investments.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg> Investments
+            </a>
+            <a href="creditcard.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg> Credit Cards
+            </a>
+            <a href="loans.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M2 12A10 10 0 1 0 22 12A10 10 0 1 0 2 12ZM14.47 11.23a1.44 1.44 0 0 1-1.07.6c-.22.04-.44.09-.67.14L12 12.18V15h-2v-2.31c0-.44.2-.85.54-1.11l2.4-1.8c.24-.18.42-.42.54-.7.12-.29.14-.6.04-.9-.09-.3-.29-.56-.56-.74-.26-.18-.58-.25-.89-.18-.32.06-.59.25-.76.53L10.5 8.35C11.16 7.15 12.63 6.64 13.9 7.13c1.26.49 1.94 1.83 1.55 3.12-.08.3-.23.59-.47.8l-.51.18ZM13 19h-2v-2h2v2Z"/></svg> Loans
+            </a>
+            <a href="services.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg> Services
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg> My Privileges
+            </a>
+            <a href="settings.html   " class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.73 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Setting
+            </a>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <!-- Topbar -->
+        <header class="topbar">
+            <button class="hamburger-btn">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="#343C6A">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
+            </button>
+            <h1>Overview</h1>
+            <div class="topbar-right">
+                <div class="search-bar">
+                    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    <input type="text" placeholder="Search for something">
+                </div>
+                <div class="icon-btn">
+                    <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.73 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                </div>
+                <div class="icon-btn red">
+                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=User&background=1814F3&color=fff&size=50" alt="Avatar" class="avatar">
+            </div>
+        </header>
+        <div class="mobile-search">
+          <svg viewBox="0 0 24 24">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+          </svg>
+          <input type="text" placeholder="Search for something">
+        </div>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- Row 1: Cards & Transactions -->
+            <div class="row">
+                <div class="my-cards-section">
+                    <div class="section-header">
+                        <h2>My Cards</h2>
+                        <a href="#">See All</a>
+                    </div>
+                    <div class="cards-container">
+                        <!-- Dark Card -->
+                        <div class="credit-card dark">
+                            <div class="card-top">
+                                <div>
+                                    <p class="card-balance-label">Balance</p>
+                                    <p class="card-balance">$5,756</p>
+                                </div>
+                                <svg class="chip-icon" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="35" height="35" rx="8" fill="rgba(255,255,255,0.2)"/><path d="M10 13h15M10 17.5h15M10 22h15" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+                            </div>
+                            <div class="card-middle">
+                                <div class="card-info">
+                                    <p class="card-info-label">CARD HOLDER</p>
+                                    <p class="card-info-value">Eddy Cusuma</p>
+                                </div>
+                                <div class="card-info">
+                                    <p class="card-info-label">VALID THRU</p>
+                                    <p class="card-info-value">12/22</p>
+                                </div>
+                            </div>
+                            <div class="card-bottom">
+                                <p class="card-number">3778 **** **** 1234</p>
+                                <div class="mastercard-icon">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Light Card -->
+                        <div class="credit-card light">
+                            <div class="card-top">
+                                <div>
+                                    <p class="card-balance-label">Balance</p>
+                                    <p class="card-balance">$5,756</p>
+                                </div>
+                                <svg class="chip-icon" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="35" height="35" rx="8" fill="#F5F7FA"/><path d="M10 13h15M10 17.5h15M10 22h15" stroke="#343C6A" stroke-width="2" stroke-linecap="round"/></svg>
+                            </div>
+                            <div class="card-middle">
+                                <div class="card-info">
+                                    <p class="card-info-label">CARD HOLDER</p>
+                                    <p class="card-info-value">Eddy Cusuma</p>
+                                </div>
+                                <div class="card-info">
+                                    <p class="card-info-label">VALID THRU</p>
+                                    <p class="card-info-value">12/22</p>
+                                </div>
+                            </div>
+                            <div class="card-bottom">
+                                <p class="card-number">3778 **** **** 1234</p>
+                                <div class="mastercard-icon">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="transactions-section">
+                    <div class="section-header">
+                        <h2>Recent Transaction</h2>
+                    </div>
+                    <div class="transactions-card">
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon yellow">
+                                    <svg viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5c-1.11 0-2-.9-2-2V5c0-1.1.89-2 2-2h14c1.1 0 2 .9 2 2v1h-9c-1.11 0-2 .9-2 2v8c0 1.1.89 2 2 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Deposit from my Card</h4>
+                                    <p>28 January 2021</p>
+                                </div>
+                            </div>
+                            <span class="transaction-amount amount-red">-$850</span>
+                        </div>
+                        
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon blue">
+                                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Deposit Paypal</h4>
+                                    <p>25 January 2021</p>
+                                </div>
+                            </div>
+                            <span class="transaction-amount amount-green">+$2,500</span>
+                        </div>
+
+                        <div class="transaction-item">
+                            <div class="transaction-left">
+                                <div class="transaction-icon green">
+                                    <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                                </div>
+                                <div class="transaction-details">
+                                    <h4>Jemi Wilson</h4>
+                                    <p>21 January 2021</p>
+                                </div>
+                            </div>
+                            <span class="transaction-amount amount-green">+$5,400</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 2: Charts -->
+            <div class="row">
+                <div class="weekly-activity-section">
+                    <div class="section-header">
+                        <h2>Weekly Activity</h2>
+                    </div>
+                    <div class="panel">
+                        <div class="chart-container">
+                            <canvas id="weeklyActivityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="expense-statistics-section">
+                    <div class="section-header">
+                        <h2>Expense Statistics</h2>
+                    </div>
+                    <div class="panel">
+                        <div class="chart-container">
+                            <canvas id="expenseChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Transfer & Balance -->
+            <div class="row eq">
+                <div class="quick-transfer-section">
+                    <div class="section-header">
+                        <h2>Quick Transfer</h2>
+                    </div>
+                    <div class="panel quick-transfer">
+                        <div class="users-list">
+                            <div class="user-item">
+                                <img src="https://ui-avatars.com/api/?name=Livia+Bator&background=ffe8e8&color=333&size=55" alt="Livia Bator" class="user-avatar">
+                                <span class="user-name">Livia Bator</span>
+                                <span class="user-role">CEO</span>
+                            </div>
+                            <div class="user-item">
+                                <img src="https://ui-avatars.com/api/?name=Randy+Press&background=e8e8ff&color=333&size=55" alt="Randy Press" class="user-avatar">
+                                <span class="user-name">Randy Press</span>
+                                <span class="user-role">Director</span>
+                            </div>
+                            <div class="user-item">
+                                <img src="https://ui-avatars.com/api/?name=Workman&background=e8ffe8&color=333&size=55" alt="Workman" class="user-avatar">
+                                <span class="user-name">Workman</span>
+                                <span class="user-role">Designer</span>
+                            </div>
+                            <div class="next-btn">
+                                <svg viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/></svg>
+                            </div>
+                        </div>
+                        
+                        <div class="transfer-form">
+                            <span class="transfer-label">Write Amount</span>
+                            <div class="transfer-input-group">
+                                <input type="text" class="transfer-input" value="525.50">
+                                <button class="send-btn">
+                                    Send <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="balance-history-section">
+                    <div class="section-header">
+                        <h2>Balance History</h2>
+                    </div>
+                    <div class="panel">
+                        <div class="chart-container">
+                            <canvas id="balanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <script>
+        // Chart Defaults
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = "#718EBF";
+
+        // Weekly Activity Bar Chart
+        const ctxWeekly = document.getElementById('weeklyActivityChart').getContext('2d');
+        new Chart(ctxWeekly, {
+            type: 'bar',
+            data: {
+                labels: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                datasets: [
+                    {
+                        label: 'Diposit',
+                        data: [250, 130, 260, 370, 240, 240, 330],
+                        backgroundColor: '#16DBCC',
+                        borderRadius: 5,
+                        barPercentage: 0.4,
+                        categoryPercentage: 0.5
+                    },
+                    {
+                        label: 'Withdraw',
+                        data: [480, 350, 330, 480, 150, 390, 390],
+                        backgroundColor: '#1814F3',
+                        borderRadius: 5,
+                        barPercentage: 0.4,
+                        categoryPercentage: 0.5
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            usePointStyle: true,
+                            pointStyle: 'circle',
+                            padding: 20,
+                            generateLabels: (chart) => {
+                                const labels = Chart.defaults.plugins.legend.labels.generateLabels(chart);
+                                labels.forEach(l => {
+                                    if(l.text === 'Diposit') l.fillStyle = '#16DBCC';
+                                    if(l.text === 'Withdraw') l.fillStyle = '#FF4B4A'; // pink red dot
+                                });
+                                return labels;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false }
+                    },
+                    y: {
+                        min: 0,
+                        max: 500,
+                        ticks: { stepSize: 100 },
+                        grid: { borderDash: [5, 5], drawBorder: false }
+                    }
+                }
+            }
+        });
+
+        // Expense Statistics Pie/Donut Chart
+        const ctxExpense = document.getElementById('expenseChart').getContext('2d');
+        new Chart(ctxExpense, {
+            type: 'pie',
+            data: {
+                labels: ['Entertainment', 'Bill Expense', 'Others', 'Investment'],
+                datasets: [{
+                    data: [30, 15, 35, 20],
+                    backgroundColor: ['#343C6A', '#FC7900', '#1814F3', '#FA00FF'],
+                    borderWidth: 5,
+                    borderColor: '#FFFFFF',
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.raw + '%';
+                            }
+                        }
+                    }
+                }
+            },
+            plugins: [{
+                id: 'customLabels',
+                afterDraw(chart, args, options) {
+                    const { ctx, chartArea: { top, bottom, left, right, width, height } } = chart;
+                    ctx.save();
+                    ctx.font = 'bold 12px Inter';
+                    ctx.fillStyle = 'white';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    chart.getDatasetMeta(0).data.forEach((datapoint, index) => {
+                        const { x, y } = datapoint.tooltipPosition();
+                        const percent = chart.data.datasets[0].data[index] + '%';
+                        const label = chart.data.labels[index];
+                        
+                        // Adjust text positions slightly for pie
+                        ctx.fillText(percent, x, y - 8);
+                        ctx.font = 'normal 10px Inter';
+                        
+                        let labelLines = label.split(' ');
+                        if(labelLines.length > 1) {
+                            ctx.fillText(labelLines[0], x, y + 6);
+                            ctx.fillText(labelLines[1], x, y + 18);
+                        } else {
+                            ctx.fillText(label, x, y + 6);
+                        }
+                        ctx.font = 'bold 12px Inter';
+                    });
+                    ctx.restore();
+                }
+            }]
+        });
+
+        // Balance History Area Chart
+        const ctxBalance = document.getElementById('balanceChart').getContext('2d');
+        const gradient = ctxBalance.createLinearGradient(0, 0, 0, 250);
+        gradient.addColorStop(0, 'rgba(24, 20, 243, 0.25)');
+        gradient.addColorStop(1, 'rgba(24, 20, 243, 0)');
+
+        new Chart(ctxBalance, {
+            type: 'line',
+            data: {
+                labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
+                datasets: [{
+                    label: 'Balance',
+                    data: [120, 320, 250, 480, 450, 780, 210, 560, 240, 620, 600], // Extrapolated curve
+                    borderColor: '#1814F3',
+                    borderWidth: 3,
+                    backgroundColor: gradient,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        labels: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
+                        grid: { borderDash: [5, 5], drawBorder: false }
+                    },
+                    y: {
+                        min: 0,
+                        max: 800,
+                        ticks: { stepSize: 200 },
+                        grid: { borderDash: [5, 5], drawBorder: false }
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const hamburgerBtn = document.querySelector(".hamburger-btn");
+            const sidebar = document.querySelector(".sidebar");
+            if (hamburgerBtn && sidebar) {
+                hamburgerBtn.addEventListener("click", function () {
+                    sidebar.classList.toggle("mobile-active");
+                });
+            }
+        });
+    </script>
+</body>
+</html>

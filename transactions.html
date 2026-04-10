@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BankDash. - Transactions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-color: #F5F7FA;
+            --sidebar-bg: #FFFFFF;
+            --primary-blue: #1814F3;
+            --text-dark: #343C6A;
+            --text-light: #718EBF;
+            --text-white: #FFFFFF;
+            --card-dark-bg: linear-gradient(107.54deg, #4C49ED 2.61%, #0A06F4 111.96%);
+            --card-light-bg: #FFFFFF;
+            --border-color: #E6EFF5;
+            --red-color: #FF4B4A;
+            --green-color: #41D4A8;
+            --teal-color: #16DBCC;
+            --shadow-sm: 0px 4px 10px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0px 8px 20px rgba(0, 0, 0, 0.08);
+            --border-radius-main: 20px;
+        }
+
+        html, body {
+            overflow-x: hidden;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            padding: 30px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .logo svg {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            fill: var(--primary-blue);
+        }
+
+        .nav {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            padding-top: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 30px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            color: var(--primary-blue);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            margin-right: 20px;
+            fill: currentColor;
+        }
+
+        .nav-item.active {
+            color: var(--primary-blue);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background-color: var(--primary-blue);
+            border-radius: 0 5px 5px 0;
+        }
+
+        /* Topbar Styles */
+        .main-wrapper {
+            margin-left: 250px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            width: 100%;
+            max-width: calc(100vw - 250px);
+        }
+
+        .topbar {
+            height: 90px;
+            background-color: var(--sidebar-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .topbar h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-color);
+            border-radius: 40px;
+            padding: 12px 20px;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .search-bar svg {
+            width: 18px;
+            height: 18px;
+            fill: var(--text-light);
+            margin-right: 10px;
+        }
+
+        .search-bar input {
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 14px;
+            color: var(--text-dark);
+            width: 100%;
+        }
+
+        .search-bar input::placeholder {
+            color: #8BA3CB;
+        }
+
+        .icon-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .icon-btn:hover {
+            background-color: #E2E8F0;
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #396AFF;
+        }
+        
+        .icon-btn.red svg {
+            fill: var(--red-color);
+        }
+
+        .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* Main Content */
+        .content {
+            padding: 30px 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .row {
+            display: grid;
+            gap: 30px;
+        }
+
+        .row.split-2-1 {
+            grid-template-columns: 2fr 1fr;
+        }
+
+        .row > * {
+            min-width: 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .section-header a {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-dark);
+            text-decoration: none;
+        }
+        
+        .section-header a:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Cards Container */
+        .cards-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .credit-card {
+            flex: 1;
+            border-radius: var(--border-radius-main);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 220px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            width: 100%;
+            max-width: 100%;
+        }
+
+        .credit-card.dark {
+            background: var(--card-dark-bg);
+            color: var(--text-white);
+        }
+
+        .credit-card.light {
+            background: var(--card-light-bg);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .card-balance-label {
+            font-size: 12px;
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+        
+        .credit-card.light .card-balance-label {
+            color: var(--text-light);
+        }
+
+        .card-balance {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .chip-icon {
+            width: 35px;
+            height: 35px;
+        }
+
+        .card-middle {
+            display: flex;
+            gap: 30px;
+            margin-top: 25px;
+        }
+
+        .card-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-info-label {
+            font-size: 11px;
+            font-weight: 400;
+            margin-bottom: 2px;
+        }
+
+        .credit-card.light .card-info-label {
+            color: var(--text-light);
+        }
+
+        .card-info-value {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .card-bottom {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .credit-card.light .card-bottom {
+            border-top: 1px solid var(--border-color);
+        }
+
+        .card-number {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .mastercard-icon {
+            display: flex;
+        }
+
+        .mastercard-icon div {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+        }
+
+        .credit-card.dark .mastercard-icon div:first-child {
+            background-color: rgba(255, 255, 255, 0.5);
+            margin-right: -10px;
+        }
+
+        .credit-card.dark .mastercard-icon div:last-child {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .credit-card.light .mastercard-icon div:first-child {
+            background-color: #9199AF;
+            margin-right: -10px;
+            opacity: 0.5;
+        }
+
+        .credit-card.light .mastercard-icon div:last-child {
+            background-color: #9199AF;
+            opacity: 0.3;
+        }
+
+        /* Generic Panels */
+        .panel {
+            background-color: var(--sidebar-bg);
+            border-radius: var(--border-radius-main);
+            padding: 25px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .panel-expense {
+            height: 220px;
+            display: flex;
+            align-items: center;
+        }
+
+        .chart-container-bar {
+            position: relative;
+            height: 90%;
+            width: 100% !important;
+            max-width: 100%;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            gap: 40px;
+            margin-bottom: 25px;
+        }
+
+        .tab {
+            padding: 10px 0;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -1px;
+            font-size: 16px;
+        }
+
+        .tab.active {
+            color: var(--primary-blue);
+            border-bottom: 3px solid var(--primary-blue);
+            font-weight: 600;
+        }
+
+        /* Transactions Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            color: var(--text-light);
+            font-weight: 500;
+            padding: 15px 10px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 15px;
+        }
+
+        td {
+            padding: 15px 10px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .desc-cell {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tx-icon-simple {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .icon-up {
+            color: var(--red-color);
+            border: 1px solid var(--red-color);
+        }
+
+        .icon-down {
+            color: var(--green-color);
+            border: 1px solid var(--green-color);
+        }
+
+        .amount-neg {
+            color: var(--red-color);
+        }
+
+        .amount-pos {
+            color: var(--green-color);
+        }
+
+        .download-btn {
+            background-color: transparent;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 13px;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .download-btn:hover {
+            background-color: var(--primary-blue);
+            color: var(--text-white);
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .page-link {
+            color: var(--primary-blue);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background 0.3s;
+        }
+
+        .page-link.active, .page-link:hover {
+            background-color: var(--primary-blue);
+            color: var(--text-white);
+        }
+
+        @media (max-width: 1200px) {
+            .row.split-2-1 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mobile-search {
+            display: none; /* hidden on desktop */
+            align-items: center;
+            background: #F5F7FA;
+            border-radius: 40px;
+            padding: 12px 20px;
+            margin: 12px 16px;
+            gap: 10px;
+        }
+        .mobile-search svg {
+            width: 18px;
+            height: 18px;
+            fill: #718EBF;
+            flex-shrink: 0;
+        }
+        .mobile-search input {
+            border: none;
+            background: none;
+            outline: none;
+            font-size: 14px;
+            color: #343C6A;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .hamburger-btn { display: none; }
+
+        @media (max-width: 768px) {
+            .mobile-search { display: flex; }
+
+            /* Overall Mobile Layout */
+            .sidebar { 
+                display: none !important; 
+                position: fixed;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background-color: var(--sidebar-bg, #fff);
+                z-index: 1000;
+                overflow-y: auto;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            }
+            .sidebar.mobile-active {
+                display: flex !important;
+            }
+            .sidebar .logo {
+                display: none;
+            }
+            .main-wrapper { margin-left: 0 !important; max-width: 100vw !important; width: 100% !important; }
+            body { overflow-x: hidden !important; }
+            .content { padding: 16px !important; gap: 16px !important; }
+
+            /* Mobile Top Bar */
+            .topbar { padding: 12px 16px !important; height: auto !important; justify-content: flex-start !important; }
+            .hamburger-btn { display: block; background: none; border: none; cursor: pointer; padding: 0 10px 0 0; }
+            .topbar h1 { font-size: 18px !important; text-align: left; flex: 1; }
+            .topbar .search-bar { display: none !important; }
+            .topbar .icon-btn { display: none !important; }
+            .topbar-right { gap: 0 !important; }
+
+            /* Mobile Cards Section */
+            .cards-container {
+                flex-direction: row !important;
+                gap: 12px !important;
+                overflow-x: auto !important;
+                padding-bottom: 8px !important;
+            }
+            .credit-card {
+                min-width: 200px !important;
+                padding: 18px !important;
+            }
+            .card-balance { font-size: 18px !important; }
+            .card-number { font-size: 14px !important; }
+
+            /* Mobile Row Layout */
+            .row, .flex-row {
+                grid-template-columns: 1fr !important;
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 16px !important;
+            }
+            .col-1, .col-2 {
+                flex: none !important;
+                width: 100% !important;
+            }
+
+            /* Mobile Recent Transactions */
+            .transactions-card {
+                height: auto !important;
+                max-height: none !important;
+            }
+
+            /* Mobile Charts */
+            .panel { padding: 16px !important; }
+            .chart-container, .chart-container-bar { height: 200px !important; }
+
+            /* Mobile Quick Transfer */
+            .users-list { gap: 16px !important; justify-content: flex-start !important; }
+            .user-avatar { width: 45px !important; height: 45px !important; }
+            .user-name { font-size: 12px !important; }
+            .user-role { font-size: 11px !important; }
+            .transfer-form { flex-direction: row !important; }
+            .transfer-input-group { flex: 1 !important; }
+
+            /* Mobile Stat Cards (Accounts page) */
+            .stats-row { display: flex !important; flex-wrap: wrap !important; gap: 15px !important; }
+            .stat-card { flex-basis: calc(50% - 10px) !important; min-width: 0 !important; }
+
+            /* Mobile Table (Transactions page) */
+            .panel > table { display: block; overflow-x: auto; white-space: nowrap; width: 100%; }
+            table { width: 100% !important; font-size: 12px !important; }
+            th, td { padding: 10px 8px !important; }
+
+            /* Mobile Pagination (Transactions page) */
+            .pagination { font-size: 12px !important; gap: 4px !important; }
+            .pagination .page-link:first-child { font-size: 0; }
+            .pagination .page-link:first-child::after { content: '<'; font-size: 14px; display: inline-block; padding: 0 4px; }
+            .pagination .page-link:last-child { font-size: 0; }
+            .pagination .page-link:last-child::after { content: '>'; font-size: 14px; display: inline-block; padding: 0 4px; }
+
+            /* Mobile Card List / Invoice rows */
+            .invoice-row { padding: 14px 16px !important; }
+
+            /* Typography adjustments on mobile */
+            .section-header h2 { font-size: 16px !important; }
+            .topbar h1 { font-size: 18px !important; }
+            .panel h2, .panel h3 { font-size: 15px !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <svg viewBox="0 0 24 24"><path d="M2.5 19h19v2h-19v-2zm16.5-11.5c0 1.93-1.57 3.5-3.5 3.5s-3.5-1.57-3.5-3.5 1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5zm-5 0c0-1.51 1.05-2.77 2.45-3.26-1.12-.16-2.27-.24-3.45-.24-5.52 0-10 4.48-10 10s4.48 10 10 10c1.07 0 2.1-.17 3.06-.48-1.57-.86-2.65-2.52-2.65-4.43 0-2.45 1.81-4.48 4.16-4.88-.04-.57-.04-1.14 0-1.71zm5 4.5l-2.45-2.45c1.05-.48 1.83-1.51 1.83-2.72 0-1.66-1.34-3-3-3s-3 1.34-3 3c0 1.21.78 2.24 1.83 2.72l-2.45 2.45h7.17z"/></svg>
+            BankDash.
+        </div>
+        <nav class="nav">
+            <a href="index.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg> Dashboard
+            </a>
+            <a href="transactions.html" class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg> Transactions
+            </a>
+            <a href="accounts.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg> Accounts
+            </a>
+            <a href="./investments.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg> Investments
+            </a>
+            <a href="creditcard.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg> Credit Cards
+            </a>
+            <a href="loans.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M2 12A10 10 0 1 0 22 12A10 10 0 1 0 2 12ZM14.47 11.23a1.44 1.44 0 0 1-1.07.6c-.22.04-.44.09-.67.14L12 12.18V15h-2v-2.31c0-.44.2-.85.54-1.11l2.4-1.8c.24-.18.42-.42.54-.7.12-.29.14-.6.04-.9-.09-.3-.29-.56-.56-.74-.26-.18-.58-.25-.89-.18-.32.06-.59.25-.76.53L10.5 8.35C11.16 7.15 12.63 6.64 13.9 7.13c1.26.49 1.94 1.83 1.55 3.12-.08.3-.23.59-.47.8l-.51.18ZM13 19h-2v-2h2v2Z"/></svg> Loans
+            </a>
+            <a href="services.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg> Services
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg> My Privileges
+            </a>
+            <a href="settings.html" class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.73 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg> Setting
+            </a>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <!-- Topbar -->
+        <header class="topbar">
+            <button class="hamburger-btn">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="#343C6A">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
+            </button>
+            <h1>Transactions</h1>
+            <div class="topbar-right">
+                <div class="search-bar">
+                    <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    <input type="text" placeholder="Search for something">
+                </div>
+                <div class="icon-btn">
+                    <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.73 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .43-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.49-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+                </div>
+                <div class="icon-btn red">
+                    <svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=User&background=1814F3&color=fff&size=50" alt="Avatar" class="avatar">
+            </div>
+        </header>
+
+        <div class="mobile-search">
+            <svg viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input type="text" placeholder="Search for something">
+        </div>
+
+        <!-- Main Content -->
+        <main class="content">
+            
+            <div class="row split-2-1">
+                <!-- My Cards Section -->
+                <div class="my-cards-section">
+                    <div class="section-header">
+                        <h2>My Cards</h2>
+                        <a href="#">+ Add Card</a>
+                    </div>
+                    <div class="cards-container">
+                        <!-- Dark Card -->
+                        <div class="credit-card dark">
+                            <div class="card-top">
+                                <div>
+                                    <p class="card-balance-label">Balance</p>
+                                    <p class="card-balance">$5,756</p>
+                                </div>
+                                <svg class="chip-icon" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="35" height="35" rx="8" fill="rgba(255,255,255,0.2)"/><path d="M10 13h15M10 17.5h15M10 22h15" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+                            </div>
+                            <div class="card-middle">
+                                <div class="card-info">
+                                    <p class="card-info-label">CARD HOLDER</p>
+                                    <p class="card-info-value">Eddy Cusuma</p>
+                                </div>
+                                <div class="card-info">
+                                    <p class="card-info-label">VALID THRU</p>
+                                    <p class="card-info-value">12/22</p>
+                                </div>
+                            </div>
+                            <div class="card-bottom">
+                                <p class="card-number">3778 **** **** 1234</p>
+                                <div class="mastercard-icon">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Light Card -->
+                        <div class="credit-card light">
+                            <div class="card-top">
+                                <div>
+                                    <p class="card-balance-label">Balance</p>
+                                    <p class="card-balance">$5,756</p>
+                                </div>
+                                <svg class="chip-icon" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="35" height="35" rx="8" fill="#F5F7FA"/><path d="M10 13h15M10 17.5h15M10 22h15" stroke="#343C6A" stroke-width="2" stroke-linecap="round"/></svg>
+                            </div>
+                            <div class="card-middle">
+                                <div class="card-info">
+                                    <p class="card-info-label">CARD HOLDER</p>
+                                    <p class="card-info-value">Eddy Cusuma</p>
+                                </div>
+                                <div class="card-info">
+                                    <p class="card-info-label">VALID THRU</p>
+                                    <p class="card-info-value">12/22</p>
+                                </div>
+                            </div>
+                            <div class="card-bottom">
+                                <p class="card-number">3778 **** **** 1234</p>
+                                <div class="mastercard-icon">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- My Expense Section -->
+                <div class="my-expense-section">
+                    <div class="section-header">
+                        <h2>My Expense</h2>
+                    </div>
+                    <div class="panel panel-expense">
+                        <div class="chart-container-bar">
+                            <canvas id="expenseChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions Table -->
+            <div class="row row-full">
+                <div class="recent-transactions-section">
+                    <div class="section-header">
+                        <h2>Recent Transactions</h2>
+                    </div>
+
+                    <div class="tabs">
+                        <a href="#" class="tab active">All Transactions</a>
+                        <a href="#" class="tab">Income</a>
+                        <a href="#" class="tab">Expense</a>
+                    </div>
+
+                    <div class="panel">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Transaction ID</th>
+                                    <th>Type</th>
+                                    <th>Card</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Receipt</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="desc-cell">
+                                        <div class="tx-icon-simple icon-up">↑</div>
+                                        Spotify Subscription
+                                    </td>
+                                    <td>#12548796</td>
+                                    <td>Shopping</td>
+                                    <td>1234 ****</td>
+                                    <td>28 Jan, 12.30 AM</td>
+                                    <td class="amount-neg">-$2,500</td>
+                                    <td><a href="#" class="download-btn">Download</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="desc-cell">
+                                        <div class="tx-icon-simple icon-down">↓</div>
+                                        Freepik Sales
+                                    </td>
+                                    <td>#12548796</td>
+                                    <td>Transfer</td>
+                                    <td>1234 ****</td>
+                                    <td>25 Jan, 10.40 PM</td>
+                                    <td class="amount-pos">+$750</td>
+                                    <td><a href="#" class="download-btn">Download</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="desc-cell">
+                                        <div class="tx-icon-simple icon-up">↑</div>
+                                        Mobile Service
+                                    </td>
+                                    <td>#12548796</td>
+                                    <td>Service</td>
+                                    <td>1234 ****</td>
+                                    <td>20 Jan, 10.40 PM</td>
+                                    <td class="amount-neg">-$150</td>
+                                    <td><a href="#" class="download-btn">Download</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="desc-cell">
+                                        <div class="tx-icon-simple icon-up">↑</div>
+                                        Wilson
+                                    </td>
+                                    <td>#12548796</td>
+                                    <td>Transfer</td>
+                                    <td>1234 ****</td>
+                                    <td>15 Jan, 03.29 PM</td>
+                                    <td class="amount-neg">-$1050</td>
+                                    <td><a href="#" class="download-btn">Download</a></td>
+                                </tr>
+                                <tr>
+                                    <td class="desc-cell">
+                                        <div class="tx-icon-simple icon-down">↓</div>
+                                        Emilly
+                                    </td>
+                                    <td>#12548796</td>
+                                    <td>Transfer</td>
+                                    <td>1234 ****</td>
+                                    <td>14 Jan, 10.40 PM</td>
+                                    <td class="amount-pos">+$840</td>
+                                    <td><a href="#" class="download-btn">Download</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="pagination">
+                            <a href="#" class="page-link">&lt; Previous</a>
+                            <a href="#" class="page-link active">1</a>
+                            <a href="#" class="page-link">2</a>
+                            <a href="#" class="page-link">3</a>
+                            <a href="#" class="page-link">4</a>
+                            <a href="#" class="page-link">Next &gt;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Chart.js configuration for My Expense bar chart -->
+    <script>
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = "#718EBF";
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const ctx = document.getElementById('expenseChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan'],
+                    datasets: [{
+                        data: [6000, 10000, 7000, 4000, 12500, 8000],
+                        backgroundColor: [
+                            '#F3F3F5', 
+                            '#F3F3F5',
+                            '#F3F3F5',
+                            '#F3F3F5',
+                            '#16DBCC', // Teal for December
+                            '#F3F3F5'
+                        ],
+                        borderRadius: 8,
+                        borderSkipped: false,
+                        barPercentage: 0.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false } // custom label instead
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false, drawBorder: false },
+                            ticks: {
+                                color: '#718EBF',
+                                font: { size: 12 }
+                            }
+                        },
+                        y: {
+                            display: false,
+                            grid: { display: false }
+                        }
+                    }
+                },
+                plugins: [{
+                    id: 'customDecLabel',
+                    afterDatasetsDraw(chart) {
+                        const { ctx, data } = chart;
+                        ctx.save();
+                        
+                        const meta = chart.getDatasetMeta(0);
+                        const decBar = meta.data[4]; // December is index 4
+                        
+                        if (decBar) {
+                            const xPos = decBar.x;
+                            const yPos = decBar.y - 10;
+                            
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'bottom';
+                            ctx.font = 'bold 12px Inter';
+                            ctx.fillStyle = '#343C6A';
+                            ctx.fillText('$12,500', xPos, yPos);
+                        }
+                        ctx.restore();
+                    }
+                }]
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const hamburgerBtn = document.querySelector(".hamburger-btn");
+            const sidebar = document.querySelector(".sidebar");
+            if (hamburgerBtn && sidebar) {
+                hamburgerBtn.addEventListener("click", function () {
+                    sidebar.classList.toggle("mobile-active");
+                });
+            }
+        });
+    </script>
+</body>
+</html>
